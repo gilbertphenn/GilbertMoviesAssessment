@@ -5,9 +5,11 @@ import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.fragment.app.Fragment
 
 open class BaseActivity: AppCompatActivity() {
 
+    val fManager by lazy { supportFragmentManager }
     protected inline fun <reified  T: ViewDataBinding> activityBinding(@LayoutRes resId: Int): Lazy<T> = lazy { DataBindingUtil.setContentView(this, resId) }
 
     fun View.showView() {
@@ -21,4 +23,6 @@ open class BaseActivity: AppCompatActivity() {
     fun View.invisibleView() {
         visibility = View.INVISIBLE
     }
+
+    fun checkStringOrNot(text: String?): Boolean = text != null && text.trim { it <= ' ' }.isNotBlank()
 }

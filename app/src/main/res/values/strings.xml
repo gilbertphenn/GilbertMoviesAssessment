@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">Gilbert Movies Assessment</string>
+
+    <!--Common-->
+    <string name="loading">Loading…</string>
+
+    <!--Main Activity-->
+    <string name="movies">Movies</string>
+    <string name="genre">Genre</string>
+    <string name="profile">Profile</string>
+
+    <!--Movies-->
+    <string name="what_is_popular">What\'s Popular</string>
+    <string name="see_all">See All</string>
+    <string name="top_rated">Top Rated</string>
 </resources>
