@@ -9,5 +9,6 @@ class MoviesData {
     var backdrop_path: String? = null
     var release_date: String? = null
     var page: Long? = null
+    var total_pages: Long? = null
     var results: MutableList<MoviesData>? = null
 }

@@ -1,6 +1,7 @@
 package gilbert.assessment.movies.ui.mainActivity.fragment.genre.adapter
 
 import android.app.Activity
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,7 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import gilbert.assessment.movies.R
 import gilbert.assessment.movies.model.GenreData
+import gilbert.assessment.movies.ui.moviesList.MoviesList
 
 class GenreAdapter(private var activity: Activity, private var data: MutableList<GenreData>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -29,7 +31,11 @@ class GenreAdapter(private var activity: Activity, private var data: MutableList
 
         init {
             cvMain.setOnClickListener {
-
+                val i = Intent(activity, MoviesList::class.java)
+                i.putExtra("intentFrom", "genre")
+                i.putExtra("genreId", data[layoutPosition].id)
+                i.putExtra("titleName", data[layoutPosition].name)
+                activity.startActivity(i)
             }
         }
     }

@@ -19,4 +19,7 @@ interface APIInterfaces {
 
     @GET("genre/movie/list")
     suspend fun getGenreList(@QueryMap params: HashMap<String, Any>): Response<GenreData>
+
+    @GET("discover/movie")
+    suspend fun getMoviesByGenre(@QueryMap params: HashMap<String, Any>): Response<MoviesData>
 }

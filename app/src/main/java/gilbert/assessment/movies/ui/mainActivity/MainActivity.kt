@@ -28,7 +28,6 @@ class MainActivity: BaseActivity() {
     }
 
     private fun setUpBottomNavigation() {
-        Log.d("movies", "RUN")
         showFragment("movies", Movies())
         binding.bottomNavigationView.inflateMenu(R.menu.main_menu)
     }

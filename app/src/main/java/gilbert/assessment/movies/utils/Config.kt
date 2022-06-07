@@ -6,4 +6,9 @@ object Config {
     const val IMAGE_URL = "https://image.tmdb.org/t/p/original/"
     const val API_KEY = "0f5f2db775f40a28eb9070c1f2439ea2"
     const val LANGUAGE = "en-US"
+
+    //RecyclerView
+    const val RECYCLERVIEW_SUCCESS = 0
+    const val RECYCLERVIEW_FAILED = 1
+    const val RECYCLERVIEW_LOADING = 2
 }

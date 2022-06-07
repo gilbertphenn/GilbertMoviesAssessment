@@ -1,49 +1,40 @@
-package gilbert.assessment.movies.ui.mainActivity.fragment.movies
+package gilbert.assessment.movies.ui.moviesList
 
-import android.content.Intent
 import android.util.Log
-import android.view.View
 import androidx.lifecycle.MutableLiveData
 import gilbert.assessment.movies.base.BaseViewModel
 import gilbert.assessment.movies.model.MoviesData
 import gilbert.assessment.movies.repo.ApiRepository
-import gilbert.assessment.movies.ui.moviesList.MoviesList
 import gilbert.assessment.movies.utils.Config
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class MoviesViewModel : BaseViewModel<Any>() {
+class MoviesListViewModel: BaseViewModel<Any>() {
 
-    val upComingMovies = MutableLiveData<MutableList<MoviesData>?>()
-    val popularMovies = MutableLiveData<MutableList<MoviesData>?>()
-    val topRatedMovies = MutableLiveData<MutableList<MoviesData>?>()
+    var page: Long = 1
+    var totalPages: Long = 2
+    val intentFrom = MutableLiveData<String>()
+    val titleName = MutableLiveData<String>()
+    val genreId = MutableLiveData<Long>()
+    val filmData = MutableLiveData<MutableList<MoviesData>?>()
 
-    fun getUpcomingMovies() {
-        job = CoroutineScope(Dispatchers.IO + exceptionHandler).launch {
-            val response = ApiRepository.getUpComingMovies(Config.API_KEY, Config.LANGUAGE)
-            withContext(Dispatchers.Main) {
-                when {
-                    response.isSuccessful -> {
-                        val data = response.body()?.results
-                        upComingMovies.value = data
-                    }
-                    else -> Log.e("errorRunAPI", response.message())
-                }
-            }
-        }
-
+    fun setParcelableData(activity: MoviesList) {
+        intentFrom.value = activity.intent.getStringExtra("intentFrom")
+        genreId.value = activity.intent.getLongExtra("genreId", 0)
+        titleName.value = activity.intent.getStringExtra("titleName") ?: ""
     }
 
-    fun getPopularMovies() {
+    fun getPopularMovies(page: Long?) {
         job = CoroutineScope(Dispatchers.IO + exceptionHandler).launch {
-            val response = ApiRepository.getPopularMovies(Config.API_KEY, Config.LANGUAGE)
+            val response = ApiRepository.getPopularMovies(Config.API_KEY, Config.LANGUAGE, page)
             withContext(Dispatchers.Main) {
                 when {
                     response.isSuccessful -> {
                         val data = response.body()?.results
-                        popularMovies.value = data
+                        filmData.value = data
+                        totalPages = response.body()?.total_pages ?: 0
                     }
                     else -> Log.e("errorRunAPI", response.message())
                 }
@@ -51,14 +42,15 @@ class MoviesViewModel : BaseViewModel<Any>() {
         }
     }
 
-    fun getTopRatedMovies() {
+    fun getTopRatedMovies(page: Long?) {
         job = CoroutineScope(Dispatchers.IO + exceptionHandler).launch {
-            val response = ApiRepository.getTopRatedMovies(Config.API_KEY, Config.LANGUAGE)
+            val response = ApiRepository.getTopRatedMovies(Config.API_KEY, Config.LANGUAGE, page)
             withContext(Dispatchers.Main) {
                 when {
                     response.isSuccessful -> {
                         val data = response.body()?.results
-                        topRatedMovies.value = data
+                        filmData.value = data
+                        totalPages = response.body()?.total_pages ?: 0
                     }
                     else -> Log.e("errorRunAPI", response.message())
                 }
@@ -66,17 +58,19 @@ class MoviesViewModel : BaseViewModel<Any>() {
         }
     }
 
-    fun seeAllPopularOnClick(view: View) {
-        Intent(view.context, MoviesList::class.java).also {
-            it.putExtra("intentFrom", "popular")
-            view.context.startActivity(it)
-        }
-    }
-
-    fun seeAllTopRatedOnClick(view: View) {
-        Intent(view.context, MoviesList::class.java).also {
-            it.putExtra("intentFrom", "topRated")
-            view.context.startActivity(it)
+    fun getMoviesByGenre(page: Long?, genre: Long?) {
+        job = CoroutineScope(Dispatchers.IO + exceptionHandler).launch {
+            val response = ApiRepository.getMoviesByGenre(Config.API_KEY, Config.LANGUAGE, page, genre)
+            withContext(Dispatchers.Main) {
+                when {
+                    response.isSuccessful -> {
+                        val data = response.body()?.results
+                        filmData.value = data
+                        totalPages = response.body()?.total_pages ?: 0
+                    }
+                    else -> Log.e("errorRunAPI", response.message())
+                }
+            }
         }
     }
 }
