@@ -1,4 +1,4 @@
-package gilbert.assessment.movies.ui.moviesList.adapter
+package gilbert.assessment.movies.ui.review.adapter
 
 import android.content.Intent
 import android.os.Handler
@@ -6,23 +6,20 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import androidx.cardview.widget.CardView
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import gilbert.assessment.movies.R
 import gilbert.assessment.movies.interfaces.RecyclerViewOnLoadMoreListener
 import gilbert.assessment.movies.interfaces.RecyclerViewRetryListener
-import gilbert.assessment.movies.model.MoviesData
-import gilbert.assessment.movies.ui.moviesDetail.MoviesDetail
-import gilbert.assessment.movies.ui.moviesList.MoviesList
+import gilbert.assessment.movies.model.ReviewData
+import gilbert.assessment.movies.ui.review.Review
 import gilbert.assessment.movies.utils.Config
 
-class MoviesListAdapter(private var activity: MoviesList, private var recyclerView: RecyclerView): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ReviewAdapter(private var activity: Review, private var recyclerView: RecyclerView): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var isLoading = false
-    private var data: MutableList<MoviesData> = mutableListOf()
+    private var data: MutableList<ReviewData> = mutableListOf()
     private var scrollListener: RecyclerView.OnScrollListener? = null
     private var loadMoreListener: RecyclerViewOnLoadMoreListener? = null
     private var retryListener: RecyclerViewRetryListener? = null
@@ -48,7 +45,7 @@ class MoviesListAdapter(private var activity: MoviesList, private var recyclerVi
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when(viewType) {
-            Config.RECYCLERVIEW_SUCCESS -> Item(LayoutInflater.from(activity).inflate(R.layout.adapter_movies_banner, parent, false))
+            Config.RECYCLERVIEW_SUCCESS -> Item(LayoutInflater.from(activity).inflate(R.layout.adapter_review, parent, false))
             Config.RECYCLERVIEW_FAILED -> Retry(LayoutInflater.from(activity).inflate(R.layout.view_recyclerview_retry, parent, false))
             else -> Loading(LayoutInflater.from(activity).inflate(R.layout.view_recyclerview_loading, parent, false))
         }
@@ -56,24 +53,19 @@ class MoviesListAdapter(private var activity: MoviesList, private var recyclerVi
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is Item) {
-            val imagesUrl = "${Config.IMAGE_URL}${data[position].backdrop_path}"
-            Glide.with(activity).load(imagesUrl).into(holder.ivBanner)
+            val author = data[position].author
+            val content = data[position].content
+
+            holder.tvAuthor.text = author
+            holder.tvReview.text = content
         }
     }
 
     override fun getItemCount(): Int = data.size
 
     private inner class Item(view: View): RecyclerView.ViewHolder(view) {
-        val cvBanner: CardView = view.findViewById(R.id.cvBanner)
-        val ivBanner: ImageView = view.findViewById(R.id.ivBanner)
-
-        init {
-            cvBanner.setOnClickListener {
-                val i = Intent(activity, MoviesDetail::class.java)
-                i.putExtra("id", data[layoutPosition].id)
-                activity.startActivity(i)
-            }
-        }
+        val tvAuthor: TextView = view.findViewById(R.id.tvAuthor)
+        val tvReview: TextView = view.findViewById(R.id.tvReview)
     }
 
     private inner class Loading(view: View): RecyclerView.ViewHolder(view)
@@ -94,7 +86,7 @@ class MoviesListAdapter(private var activity: MoviesList, private var recyclerVi
         this.retryListener = listener
     }
 
-    fun addData(data: MutableList<MoviesData>) {
+    fun addData(data: MutableList<ReviewData>) {
         this.data.addAll(data)
         Handler(Looper.getMainLooper()).post {
             notifyDataSetChanged()
@@ -102,7 +94,7 @@ class MoviesListAdapter(private var activity: MoviesList, private var recyclerVi
     }
 
     fun addLoadingData() {
-        this.data.add(MoviesData())
+        this.data.add(ReviewData())
         recyclerView.post {
             notifyDataSetChanged()
         }

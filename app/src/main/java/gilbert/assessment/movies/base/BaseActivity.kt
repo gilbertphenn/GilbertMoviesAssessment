@@ -1,11 +1,13 @@
 package gilbert.assessment.movies.base
 
+import android.annotation.SuppressLint
 import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
+import java.text.SimpleDateFormat
 
 open class BaseActivity: AppCompatActivity() {
 
@@ -25,4 +27,16 @@ open class BaseActivity: AppCompatActivity() {
     }
 
     fun checkStringOrNot(text: String?): Boolean = text != null && text.trim { it <= ' ' }.isNotBlank()
+
+    @SuppressLint("SimpleDateFormat")
+    fun convertDateFormat(current: String, oldFormat: String, newFormat: String): String {
+        return try {
+            var dateFormat = SimpleDateFormat(oldFormat)
+            val newDate = dateFormat.parse(current)
+            dateFormat = SimpleDateFormat(newFormat)
+            dateFormat.format(newDate!!)
+        } catch (e: Exception) {
+            ""
+        }
+    }
 }

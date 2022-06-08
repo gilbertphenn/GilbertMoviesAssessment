@@ -4,6 +4,8 @@ class MoviesData {
 
     var id: Long? = null
     var title: String? = null
+    var author: String? = null
+    var content: String? = null
     var overview: String? = null
     var poster_path: String? = null
     var backdrop_path: String? = null

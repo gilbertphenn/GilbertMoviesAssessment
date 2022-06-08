@@ -14,5 +14,11 @@
     <!--Movies-->
     <string name="what_is_popular">What\'s Popular</string>
     <string name="see_all">See All</string>
+    <string name="see_all_review">See Review</string>
     <string name="top_rated">Top Rated</string>
+
+    <!--Review-->
+    <string name="review">Review</string>
+    <string name="author">Author</string>
+    <string name="overview">Overview</string>
 </resources>
